@@ -8,8 +8,17 @@ function App() {
   const [items, setItems] = useState(itemsTable);
 
   const schema = yup.object().shape({
-    received_quantity: yup.string().required('Received quantity is required'),
-    damaged_quantity: yup.string().required('Received quantity is required'),
+    quantity: yup.number(),
+    received_quantity: yup
+      .number()
+      .typeError('Received quantity must be a number')
+      .required('Received quantity is required')
+      .max(yup.ref('quantity'), 'Received quantity cannot exceed quantity'),
+    damaged_quantity: yup
+      .number()
+      .typeError('Damaged quantity must be a number')
+      .required('Damaged quantity is required')
+      .max(yup.ref('quantity'), 'Damaged quantity cannot exceed quantity'),
     comment: yup.string().required('Comment is required'),
   });
 

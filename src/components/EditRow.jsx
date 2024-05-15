@@ -3,17 +3,24 @@ import { TableCell, TableRow, TextField, IconButton } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-
-// Define validation schema using Yup
 
 export default function EditRow({ handleSave, columns, item, key, schema }) {
+  const defaultValues = {};
+
+  // Constructing defaultValues object dynamically
+  columns.forEach((column) => {
+    defaultValues[column.field] = item[column.field];
+  });
+
+  console.log('lele', defaultValues);
+
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
+    defaultValues: defaultValues,
   });
 
   const onSubmit = (data) => {
@@ -30,12 +37,13 @@ export default function EditRow({ handleSave, columns, item, key, schema }) {
             <Controller
               name={column.field}
               control={control}
-              defaultValue={item[column.field]}
+              //   defaultValue={item[column.field]}
               render={({ field }) => (
                 <TextField
                   {...field}
                   error={!!errors[column.field]}
                   helperText={errors[column.field]?.message}
+                  type={column.type ? column.type : 'string'}
                 />
               )}
             />

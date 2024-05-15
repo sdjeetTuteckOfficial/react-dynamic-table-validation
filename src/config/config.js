@@ -217,7 +217,17 @@ export const columns = [
   { field: 'item_desc', headerName: 'Description' },
   { field: 'brand', headerName: 'Brand' },
   { field: 'quantity', headerName: 'Quantity' },
-  { field: 'received_quantity', headerName: 'Received Quantity', isEdit: true },
-  { field: 'damaged_quantity', headerName: 'Damaged Quantity', isEdit: true },
+  {
+    field: 'received_quantity',
+    headerName: 'Received Quantity',
+    isEdit: true,
+    type: 'number',
+  },
+  {
+    field: 'damaged_quantity',
+    headerName: 'Damaged Quantity',
+    isEdit: true,
+    type: 'number',
+  },
   { field: 'comment', headerName: 'Comment', isEdit: true },
 ];
