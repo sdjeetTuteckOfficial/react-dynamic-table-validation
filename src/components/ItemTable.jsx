@@ -26,6 +26,7 @@ const ItemTable = ({
   schema,
   selectedItems,
   onSelectChange,
+  handleDeleteClick,
 }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -150,7 +151,9 @@ const ItemTable = ({
                 </Tooltip>
               </TableCell>
             ))}
-            {editingId && <TableCell>Action</TableCell>}
+            {editingId && (
+              <TableCell sx={{ textAlign: 'center' }}>Action</TableCell>
+            )}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -169,6 +172,8 @@ const ItemTable = ({
                   isItemSelected={isItemSelected}
                   labelId={labelId}
                   handleCheckboxClick={() => handleCheckboxClick(item.id)}
+                  handleDeleteClick={handleDeleteClick}
+                  key={item.id}
                 />
               ) : (
                 <ViewRow
@@ -180,6 +185,7 @@ const ItemTable = ({
                   editingId={editingId}
                   labelId={labelId}
                   handleCheckboxClick={() => handleCheckboxClick(item.id)}
+                  key={item.id}
                 />
               );
             })}
@@ -210,6 +216,7 @@ ItemTable.propTypes = {
   schema: PropTypes.object.isRequired,
   selectedItems: PropTypes.array.isRequired,
   onSelectChange: PropTypes.func.isRequired,
+  handleDeleteClick: PropTypes.func,
 };
 
 export default ItemTable;

@@ -9,6 +9,7 @@ import {
 import SaveIcon from '@mui/icons-material/Save';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const EditRow = ({
   handleSave,
@@ -18,6 +19,7 @@ const EditRow = ({
   isItemSelected,
   labelId,
   handleCheckboxClick,
+  handleDeleteClick,
   index,
 }) => {
   const defaultValues = {};
@@ -73,9 +75,12 @@ const EditRow = ({
           )}
         </TableCell>
       ))}
-      <TableCell>
+      <TableCell sx={{ display: 'flex', flexDirection: 'row' }}>
         <IconButton onClick={handleSubmit(onSubmit)}>
-          <SaveIcon />
+          <SaveIcon color='primary' />
+        </IconButton>
+        <IconButton onClick={() => handleDeleteClick(item.id)}>
+          <DeleteIcon color='error' />
         </IconButton>
       </TableCell>
     </TableRow>
@@ -90,6 +95,7 @@ EditRow.propTypes = {
   isItemSelected: PropTypes.bool.isRequired,
   labelId: PropTypes.string.isRequired,
   handleCheckboxClick: PropTypes.func.isRequired,
+  handleDeleteClick: PropTypes.func,
   index: PropTypes.number.isRequired,
 };
 

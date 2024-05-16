@@ -14,7 +14,6 @@ const ViewRow = ({
   const idRow = item.id;
   return (
     <TableRow key={idRow}>
-      {console.log(item.id)}
       <TableCell padding='checkbox'>
         <Checkbox
           checked={isItemSelected}
@@ -37,7 +36,7 @@ ViewRow.propTypes = {
   item: PropTypes.object.isRequired,
   columns: PropTypes.array.isRequired,
   onRowClick: PropTypes.func.isRequired,
-  editingId: PropTypes.string,
+  editingId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   isItemSelected: PropTypes.bool.isRequired,
   labelId: PropTypes.string.isRequired,
   handleCheckboxClick: PropTypes.func.isRequired,

@@ -35,13 +35,11 @@ function App() {
   });
 
   const handleSaveClick = (editedItem) => {
-    console.log('values', editedItem);
     const updatedItems = items.map((item) =>
       item.id === editedItem.id ? editedItem : item
     );
     setItems(updatedItems);
   };
-  console.log('hohoho');
 
   const handleDeleteClick = (id) => {
     const updatedItems = items.filter((item) => item.id !== id);
@@ -55,7 +53,6 @@ function App() {
   return (
     <div className='App'>
       <h1>Material-UI Table Example</h1>
-      {console.log('selected', selectedItems)}
       <ItemTable
         items={items}
         onSaveClick={handleSaveClick}
@@ -64,6 +61,7 @@ function App() {
         schema={schema}
         selectedItems={selectedItems}
         onSelectChange={handleSelectChange}
+        handleDeleteClick={handleDeleteClick}
       />
       <div>
         Selected Id:{' '}
