@@ -26,7 +26,12 @@ function App() {
       .required('Damaged quantity is required')
       .min(0, 'Damaged quantity must be a positive number')
       .max(yup.ref('quantity'), 'Damaged quantity cannot exceed quantity'),
-    comment: yup.string().required('Comment is required'),
+    comment: yup.string().when('damaged_quantity', {
+      is: (val) => val > 0,
+      then: (schema) =>
+        schema.required('Comment is required when there is damaged quantity'),
+      otherwise: (schema) => schema,
+    }),
   });
 
   const handleSaveClick = (editedItem) => {
