@@ -44,6 +44,7 @@ export default function EditRow({ handleSave, columns, item, key, schema }) {
                   error={!!errors[column.field]}
                   helperText={errors[column.field]?.message}
                   type={column.type ? column.type : 'string'}
+                  size='small'
                 />
               )}
             />

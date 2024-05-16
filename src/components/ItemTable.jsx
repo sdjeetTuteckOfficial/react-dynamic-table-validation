@@ -60,6 +60,7 @@ const ItemTable = ({ columns, items, onSaveClick, schema }) => {
             {columns.map((column) => (
               <TableCell key={column.field}>{column.headerName}</TableCell>
             ))}
+            {editingId && <TableCell>Action</TableCell>}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -82,6 +83,7 @@ const ItemTable = ({ columns, items, onSaveClick, schema }) => {
                   key={item.id}
                   columns={columns}
                   onRowClick={handleEditClick}
+                  editingId={editingId}
                 />
               );
             })}
