@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import PropTypes from 'prop-types';
 import {
   Table,
   TableBody,
@@ -9,9 +10,12 @@ import {
   Paper,
   TablePagination,
   Checkbox,
-  IconButton,
   TextField,
+  Tooltip,
+  Box,
+  InputAdornment,
 } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import ViewRow from './ViewRow';
 import EditRow from './EditRow';
 
@@ -27,6 +31,7 @@ const ItemTable = ({
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [editingId, setEditingId] = useState(null);
   const [editedData, setEditedData] = useState({});
+  const [globalSearch, setGlobalSearch] = useState('');
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -40,11 +45,9 @@ const ItemTable = ({
   const handleEditClick = (item) => {
     setEditingId(item.id);
     setEditedData(item);
-    console.log('clicked');
   };
 
   const handleSaveClick = (data) => {
-    console.log('ke jane', data);
     onSaveClick({
       ...editedData,
       ...data,
@@ -82,15 +85,38 @@ const ItemTable = ({
     onSelectChange(newSelected);
   };
 
-  // const handleInputChange = (e, field) => {
-  //   setEditedData((prevData) => ({
-  //     ...prevData,
-  //     [field]: e.target.value,
-  //   }));
-  // };
+  const handleGlobalSearchChange = (event) => {
+    setGlobalSearch(event.target.value);
+  };
+
+  const filteredItems = items.filter((item) =>
+    columns.some((column) =>
+      item[column.field]
+        .toString()
+        .toLowerCase()
+        .includes(globalSearch.toLowerCase())
+    )
+  );
 
   return (
     <TableContainer component={Paper}>
+      <Box sx={{ padding: '16px', justifyContent: 'right', display: 'flex' }}>
+        <TextField
+          label='Search'
+          variant='outlined'
+          value={globalSearch}
+          onChange={handleGlobalSearchChange}
+          size='small'
+          width='400px'
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position='end'>
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Box>
       <Table>
         <TableHead>
           <TableRow>
@@ -108,18 +134,30 @@ const ItemTable = ({
               />
             </TableCell>
             {columns.map((column) => (
-              <TableCell key={column.field}>{column.headerName}</TableCell>
+              <TableCell key={column.field} style={{ whiteSpace: 'nowrap' }}>
+                <Tooltip title={column.headerName}>
+                  <span
+                    style={{
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      maxWidth: '150px', // adjust as needed
+                    }}
+                  >
+                    {column.headerName}
+                  </span>
+                </Tooltip>
+              </TableCell>
             ))}
             {editingId && <TableCell>Action</TableCell>}
           </TableRow>
         </TableHead>
         <TableBody>
-          {items
+          {filteredItems
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((item) => {
+            .map((item, index) => {
               const isItemSelected = selectedItems.indexOf(item.id) !== -1;
               const labelId = `enhanced-table-checkbox-${item.id}`;
-              console.log(editingId === item.id);
               return editingId === item.id ? (
                 <EditRow
                   item={item}
@@ -149,7 +187,7 @@ const ItemTable = ({
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component='div'
-        count={items.length}
+        count={filteredItems.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
@@ -157,6 +195,20 @@ const ItemTable = ({
       />
     </TableContainer>
   );
+};
+
+ItemTable.propTypes = {
+  columns: PropTypes.arrayOf(
+    PropTypes.shape({
+      field: PropTypes.string.isRequired,
+      headerName: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  items: PropTypes.array.isRequired,
+  onSaveClick: PropTypes.func.isRequired,
+  schema: PropTypes.object.isRequired,
+  selectedItems: PropTypes.array.isRequired,
+  onSelectChange: PropTypes.func.isRequired,
 };
 
 export default ItemTable;

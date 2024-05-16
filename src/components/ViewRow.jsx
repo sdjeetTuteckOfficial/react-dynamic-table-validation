@@ -1,16 +1,16 @@
-import React from 'react';
+import PropTypes from 'prop-types';
 import { TableRow, TableCell, Checkbox } from '@mui/material';
 
-export default function ViewRow({
+const ViewRow = ({
   item,
   columns,
-  key,
   onRowClick,
   editingId,
   isItemSelected,
   labelId,
   handleCheckboxClick,
-}) {
+  key,
+}) => {
   return (
     <TableRow key={key}>
       <TableCell padding='checkbox'>
@@ -28,4 +28,17 @@ export default function ViewRow({
       {editingId && <TableCell></TableCell>}
     </TableRow>
   );
-}
+};
+
+ViewRow.propTypes = {
+  item: PropTypes.object.isRequired,
+  columns: PropTypes.array.isRequired,
+  onRowClick: PropTypes.func.isRequired,
+  editingId: PropTypes.string,
+  isItemSelected: PropTypes.bool.isRequired,
+  labelId: PropTypes.string.isRequired,
+  handleCheckboxClick: PropTypes.func.isRequired,
+  key: PropTypes.string.isRequired,
+};
+
+export default ViewRow;

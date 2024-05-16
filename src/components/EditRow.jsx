@@ -1,4 +1,4 @@
-import React from 'react';
+import PropTypes from 'prop-types';
 import {
   TableCell,
   TableRow,
@@ -10,7 +10,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-export default function EditRow({
+const EditRow = ({
   handleSave,
   columns,
   item,
@@ -19,15 +19,13 @@ export default function EditRow({
   isItemSelected,
   labelId,
   handleCheckboxClick,
-}) {
+}) => {
   const defaultValues = {};
 
   // Constructing defaultValues object dynamically
   columns.forEach((column) => {
     defaultValues[column.field] = item[column.field];
   });
-
-  console.log('lele', defaultValues);
 
   const {
     control,
@@ -39,12 +37,12 @@ export default function EditRow({
   });
 
   const onSubmit = (data) => {
-    console.log(data);
     handleSave(data);
   };
 
   return (
     <TableRow key={key}>
+      {console.log('key', key)}
       <TableCell padding='checkbox'>
         <Checkbox
           checked={isItemSelected}
@@ -52,14 +50,12 @@ export default function EditRow({
           onClick={handleCheckboxClick}
         />
       </TableCell>
-      {console.log(errors)}
       {columns.map((column, index) => (
         <TableCell key={index}>
           {column.isEdit ? (
             <Controller
               name={column.field}
               control={control}
-              //   defaultValue={item[column.field]}
               render={({ field }) => (
                 <TextField
                   {...field}
@@ -75,7 +71,6 @@ export default function EditRow({
           )}
         </TableCell>
       ))}
-
       <TableCell>
         <IconButton onClick={handleSubmit(onSubmit)}>
           <SaveIcon />
@@ -83,4 +78,17 @@ export default function EditRow({
       </TableCell>
     </TableRow>
   );
-}
+};
+
+EditRow.propTypes = {
+  handleSave: PropTypes.func.isRequired,
+  columns: PropTypes.array.isRequired,
+  item: PropTypes.object.isRequired,
+  key: PropTypes.string.isRequired,
+  schema: PropTypes.object.isRequired,
+  isItemSelected: PropTypes.bool.isRequired,
+  labelId: PropTypes.string.isRequired,
+  handleCheckboxClick: PropTypes.func.isRequired,
+};
+
+export default EditRow;
