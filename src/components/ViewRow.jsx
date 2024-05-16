@@ -9,10 +9,12 @@ const ViewRow = ({
   isItemSelected,
   labelId,
   handleCheckboxClick,
-  key,
+  index,
 }) => {
+  const idRow = item.id;
   return (
-    <TableRow key={key}>
+    <TableRow key={idRow}>
+      {console.log(item.id)}
       <TableCell padding='checkbox'>
         <Checkbox
           checked={isItemSelected}
@@ -20,6 +22,7 @@ const ViewRow = ({
           onClick={handleCheckboxClick}
         />
       </TableCell>
+      <TableCell>{index + 1}</TableCell>
       {columns.map((column, index) => (
         <TableCell key={index} onClick={() => onRowClick(item)}>
           {item[column.field]}
@@ -38,7 +41,7 @@ ViewRow.propTypes = {
   isItemSelected: PropTypes.bool.isRequired,
   labelId: PropTypes.string.isRequired,
   handleCheckboxClick: PropTypes.func.isRequired,
-  key: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
 };
 
 export default ViewRow;

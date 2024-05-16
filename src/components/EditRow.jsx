@@ -14,11 +14,11 @@ const EditRow = ({
   handleSave,
   columns,
   item,
-  key,
   schema,
   isItemSelected,
   labelId,
   handleCheckboxClick,
+  index,
 }) => {
   const defaultValues = {};
 
@@ -40,9 +40,10 @@ const EditRow = ({
     handleSave(data);
   };
 
+  const idRow = item.id;
+
   return (
-    <TableRow key={key}>
-      {console.log('key', key)}
+    <TableRow key={idRow}>
       <TableCell padding='checkbox'>
         <Checkbox
           checked={isItemSelected}
@@ -50,6 +51,7 @@ const EditRow = ({
           onClick={handleCheckboxClick}
         />
       </TableCell>
+      <TableCell>{index + 1}</TableCell>
       {columns.map((column, index) => (
         <TableCell key={index}>
           {column.isEdit ? (
@@ -84,11 +86,11 @@ EditRow.propTypes = {
   handleSave: PropTypes.func.isRequired,
   columns: PropTypes.array.isRequired,
   item: PropTypes.object.isRequired,
-  key: PropTypes.string.isRequired,
   schema: PropTypes.object.isRequired,
   isItemSelected: PropTypes.bool.isRequired,
   labelId: PropTypes.string.isRequired,
   handleCheckboxClick: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired,
 };
 
 export default EditRow;

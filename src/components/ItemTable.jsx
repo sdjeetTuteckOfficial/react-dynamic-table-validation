@@ -133,8 +133,9 @@ const ItemTable = ({
                 inputProps={{ 'aria-label': 'select all items' }}
               />
             </TableCell>
+            <TableCell sx={{ whiteSpace: 'nowrap' }}>Sl. no.</TableCell>
             {columns.map((column) => (
-              <TableCell key={column.field} style={{ whiteSpace: 'nowrap' }}>
+              <TableCell key={column.field} sx={{ whiteSpace: 'nowrap' }}>
                 <Tooltip title={column.headerName}>
                   <span
                     style={{
@@ -161,7 +162,7 @@ const ItemTable = ({
               return editingId === item.id ? (
                 <EditRow
                   item={item}
-                  key={item.id}
+                  index={index}
                   columns={columns}
                   handleSave={handleSaveClick}
                   schema={schema}
@@ -172,7 +173,7 @@ const ItemTable = ({
               ) : (
                 <ViewRow
                   item={item}
-                  key={item.id}
+                  index={index}
                   columns={columns}
                   onRowClick={handleEditClick}
                   isItemSelected={isItemSelected}

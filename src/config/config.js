@@ -212,7 +212,7 @@ export const itemsTable = [
 ];
 
 export const columns = [
-  { field: 'id', headerName: 'ID' },
+  // { field: 'id', headerName: 'ID' },
   { field: 'item_name', headerName: 'Item Name' },
   { field: 'item_desc', headerName: 'Description' },
   { field: 'brand', headerName: 'Brand' },
