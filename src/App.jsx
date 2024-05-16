@@ -6,18 +6,25 @@ import * as yup from 'yup';
 
 function App() {
   const [items, setItems] = useState(itemsTable);
+  const [selectedItems, setSelectedItems] = useState([]);
 
   const schema = yup.object().shape({
-    quantity: yup.number(),
+    quantity: yup
+      .number()
+      .typeError('Quantity must be a number')
+      .required('Quantity is required')
+      .min(0, 'Quantity must be a positive number'),
     received_quantity: yup
       .number()
       .typeError('Received quantity must be a number')
       .required('Received quantity is required')
+      .min(0, 'Received quantity must be a positive number')
       .max(yup.ref('quantity'), 'Received quantity cannot exceed quantity'),
     damaged_quantity: yup
       .number()
       .typeError('Damaged quantity must be a number')
       .required('Damaged quantity is required')
+      .min(0, 'Damaged quantity must be a positive number')
       .max(yup.ref('quantity'), 'Damaged quantity cannot exceed quantity'),
     comment: yup.string().required('Comment is required'),
   });
@@ -36,16 +43,29 @@ function App() {
     setItems(updatedItems);
   };
 
+  const handleSelectChange = (selected) => {
+    setSelectedItems(selected);
+  };
+
   return (
     <div className='App'>
       <h1>Material-UI Table Example</h1>
+      {console.log('selected', selectedItems)}
       <ItemTable
         items={items}
         onSaveClick={handleSaveClick}
         onDeleteClick={handleDeleteClick}
         columns={columns}
         schema={schema}
+        selectedItems={selectedItems}
+        onSelectChange={handleSelectChange}
       />
+      <div>
+        Selected Id:{' '}
+        {selectedItems.map((id) => {
+          return `${id},`;
+        })}
+      </div>
     </div>
   );
 }

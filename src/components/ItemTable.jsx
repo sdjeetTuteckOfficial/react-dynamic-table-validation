@@ -8,13 +8,21 @@ import {
   TableRow,
   Paper,
   TablePagination,
+  Checkbox,
   IconButton,
   TextField,
 } from '@mui/material';
 import ViewRow from './ViewRow';
 import EditRow from './EditRow';
 
-const ItemTable = ({ columns, items, onSaveClick, schema }) => {
+const ItemTable = ({
+  columns,
+  items,
+  onSaveClick,
+  schema,
+  selectedItems,
+  onSelectChange,
+}) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [editingId, setEditingId] = useState(null);
@@ -45,18 +53,60 @@ const ItemTable = ({ columns, items, onSaveClick, schema }) => {
     setEditedData({});
   };
 
-  const handleInputChange = (e, field) => {
-    setEditedData((prevData) => ({
-      ...prevData,
-      [field]: e.target.value,
-    }));
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelected = items.map((item) => item.id);
+      onSelectChange(newSelected);
+      return;
+    }
+    onSelectChange([]);
   };
+
+  const handleCheckboxClick = (id) => {
+    const selectedIndex = selectedItems.indexOf(id);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selectedItems, id);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selectedItems.slice(1));
+    } else if (selectedIndex === selectedItems.length - 1) {
+      newSelected = newSelected.concat(selectedItems.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selectedItems.slice(0, selectedIndex),
+        selectedItems.slice(selectedIndex + 1)
+      );
+    }
+
+    onSelectChange(newSelected);
+  };
+
+  // const handleInputChange = (e, field) => {
+  //   setEditedData((prevData) => ({
+  //     ...prevData,
+  //     [field]: e.target.value,
+  //   }));
+  // };
 
   return (
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>
+            <TableCell padding='checkbox'>
+              <Checkbox
+                indeterminate={
+                  selectedItems.length > 0 &&
+                  selectedItems.length < items.length
+                }
+                checked={
+                  items.length > 0 && selectedItems.length === items.length
+                }
+                onChange={handleSelectAllClick}
+                inputProps={{ 'aria-label': 'select all items' }}
+              />
+            </TableCell>
             {columns.map((column) => (
               <TableCell key={column.field}>{column.headerName}</TableCell>
             ))}
@@ -64,18 +114,22 @@ const ItemTable = ({ columns, items, onSaveClick, schema }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {console.log('editid', editingId)}
           {items
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((item) => {
+              const isItemSelected = selectedItems.indexOf(item.id) !== -1;
+              const labelId = `enhanced-table-checkbox-${item.id}`;
               console.log(editingId === item.id);
-              return editingId === item.id ? ( // Ensure to return JSX here
+              return editingId === item.id ? (
                 <EditRow
                   item={item}
                   key={item.id}
                   columns={columns}
                   handleSave={handleSaveClick}
                   schema={schema}
+                  isItemSelected={isItemSelected}
+                  labelId={labelId}
+                  handleCheckboxClick={() => handleCheckboxClick(item.id)}
                 />
               ) : (
                 <ViewRow
@@ -83,7 +137,10 @@ const ItemTable = ({ columns, items, onSaveClick, schema }) => {
                   key={item.id}
                   columns={columns}
                   onRowClick={handleEditClick}
+                  isItemSelected={isItemSelected}
                   editingId={editingId}
+                  labelId={labelId}
+                  handleCheckboxClick={() => handleCheckboxClick(item.id)}
                 />
               );
             })}

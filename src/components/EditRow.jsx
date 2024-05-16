@@ -1,10 +1,25 @@
 import React from 'react';
-import { TableCell, TableRow, TextField, IconButton } from '@mui/material';
+import {
+  TableCell,
+  TableRow,
+  TextField,
+  IconButton,
+  Checkbox,
+} from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-export default function EditRow({ handleSave, columns, item, key, schema }) {
+export default function EditRow({
+  handleSave,
+  columns,
+  item,
+  key,
+  schema,
+  isItemSelected,
+  labelId,
+  handleCheckboxClick,
+}) {
   const defaultValues = {};
 
   // Constructing defaultValues object dynamically
@@ -30,6 +45,13 @@ export default function EditRow({ handleSave, columns, item, key, schema }) {
 
   return (
     <TableRow key={key}>
+      <TableCell padding='checkbox'>
+        <Checkbox
+          checked={isItemSelected}
+          inputProps={{ 'aria-labelledby': labelId }}
+          onClick={handleCheckboxClick}
+        />
+      </TableCell>
       {console.log(errors)}
       {columns.map((column, index) => (
         <TableCell key={index}>
@@ -53,6 +75,7 @@ export default function EditRow({ handleSave, columns, item, key, schema }) {
           )}
         </TableCell>
       ))}
+
       <TableCell>
         <IconButton onClick={handleSubmit(onSubmit)}>
           <SaveIcon />
